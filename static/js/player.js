@@ -1,7 +1,9 @@
 class Player {
-  constructor(x, y, r, w, h, ctx, name, colour, active) {
+  constructor(x, y, r, w, h, ctx, name, colour) {
     this.x = x;
     this.y = y;
+    this.oX = x;
+    this.oY = y
     this.r = r;
     this.vX = 0;
     this.vY = 0;
@@ -11,7 +13,7 @@ class Player {
     this.ctx = ctx;
     this.name = name;
     this.colour = colour;
-    this.active = active;
+    this.active = false;
     this.activeDirections = [];
     this.releasedPuck = false;
   }
@@ -23,7 +25,8 @@ class Player {
   }
 
   reset(){
-      // add positions
+    this.x = this.oX;
+    this.y = this.oY;
     this.vX = 0;
     this.vY = 0;
     this.activeDirections = [];
