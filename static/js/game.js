@@ -6,6 +6,8 @@ class Game {
     this.height = height;
     this.players = players;
     this.activePlayer = activePlayer;
+    this.netL = new Net(50, this.height/2, 10, this.height/4, this.ctx)
+    this.netR = new Net(this.width - 50, this.height/2, 10, this.height/4, this.ctx)
   }
 
   clock(){
@@ -19,12 +21,16 @@ class Game {
   }
 
   update(){
-    this.players.forEach(p => p.update());
+    this.players.forEach(p => p.update([this.netL, this.netR]));
   }
 
   redraw(){
     this.ctx.clearRect(0, 0, this.width, this.height);
+
     this.players.forEach(p => p.redraw());
+
+    this.netL.redraw();
+    this.netR.redraw();
   }
   
 }

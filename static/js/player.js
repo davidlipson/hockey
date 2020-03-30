@@ -14,14 +14,14 @@ class Player {
     this.activeDirections = [];
   }
   
-  update(){
+  update(obstacles){
     this.skate();
-    this.move();
+    this.move(obstacles);
   }
 
   redraw(){
     this.ctx.fillStyle = this.colour; // change to team.color
-    this.ctx.fillRect(this.x - this.r/2, this.y - this.r/2, this.r, this.r)
+    this.ctx.fillRect(this.x - this.r/2, this.y - this.r/2, thais.r, this.r)
   }
 
   skate(){
@@ -55,7 +55,7 @@ class Player {
       }
   }
 
-
+  // add obstacles!!!
   move(){
     this.y += this.vY;
     if(this.y - this.r/2 < 0){
