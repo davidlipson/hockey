@@ -4,16 +4,20 @@ $(document).ready(function(){
     var height = $("#canvas").height();
     var width = $("#canvas").width();
 
-    var activePlayer = new Player(100, 100, 25, width, height, ctx, "red", true)
+    var activePlayer = new Player(100, 100, 25, width, height, ctx, "Bob", "red", true)
 	var players = [activePlayer]
 	var game = new Game(ctx, width, height, players, activePlayer);
 
-
-	var pressedKeys = [];
-
 	// start moving
 	$(document).keydown(function(e) {
-		console.log(pressedKeys);
+		// shot
+		if (e.which == 32){
+			if (game.puck.owner === game.activePlayer){
+				game.puck.shoot();
+			}
+		}
+
+		// movement
 		var moveMap = {
 			37: "left",
 			38: "up",
@@ -21,9 +25,9 @@ $(document).ready(function(){
 			40: "down"
 		}
 
-		if (e.which in moveMap && !(pressedKeys.includes(moveMap[e.which]))){
-			pressedKeys.push(moveMap[e.which]);
-			game.updateActiveDirections(pressedKeys);
+		if (e.which in moveMap && !(game.pressedKeys.includes(moveMap[e.which]))){
+			game.pressedKeys.push(moveMap[e.which]);
+			game.updateActiveDirections();
 		}
 	    
 	    e.preventDefault(); // prevent the default action (scroll / move caret)
@@ -32,7 +36,6 @@ $(document).ready(function(){
 	// stop moving
 	// start moving
 	$(document).keyup(function(e) {
-		console.log(pressedKeys);
 		var moveMap = {
 			37: "left",
 			38: "up",
@@ -40,9 +43,9 @@ $(document).ready(function(){
 			40: "down"
 		}
 
-		if (pressedKeys.includes(moveMap[e.which])){
-			pressedKeys = pressedKeys.filter(function(value, index, arr){ return value != moveMap[e.which];});
-			game.updateActiveDirections(pressedKeys);
+		if (game.pressedKeys.includes(moveMap[e.which])){
+			game.pressedKeys = game.pressedKeys.filter(function(value, index, arr){ return value != moveMap[e.which];});
+			game.updateActiveDirections();
 		}
 	    
 	    e.preventDefault(); // prevent the default action (scroll / move caret)
