@@ -102,6 +102,11 @@ class Game {
 
     // puck
     this.puck.redraw();
+
+    // scores
+    this.ctx.font = "30px Verdana";
+    this.ctx.fillText(`${this.netL.goals}`, 3*this.width/4, this.height-20);
+    this.ctx.fillText(`${this.netR.goals}`, this.width/4, this.height-20);
   }
   
 }

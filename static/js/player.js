@@ -7,7 +7,7 @@ class Player {
     this.r = r;
     this.vX = 0;
     this.vY = 0;
-    this.vMax = 10;
+    this.vMax = 5;
     this.width = w;
     this.height = h;
     this.ctx = ctx;
