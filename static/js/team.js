@@ -1,18 +1,35 @@
 class Team {
-  constructor(net, players, name, colour, type) {
+  constructor(net, name, colour, type) {
     this.net = net;
-    this.players =players;
     this.name = name;
     this.colour = colour;
     this.type = type;
+  }
+  setOpponent(o){
+    this.opponent = o;
+  }
 
-    if (type == "user"){
+  setPlayers(players){
+    this.players = players;
+
+    if (this.type == "user"){
       this.activePlayer = this.players[0];
       this.activePlayer.activation(true, []);
     }
     else{
       this.activePlayer = null;
     }
+
+    this.players.forEach(p => p.setPP());
+  }
+
+  notifyMove(movedPlayer){
+    this.players.forEach(p => p.updatePotential(movedPlayer, "team"));
+    this.opponent.players.forEach(p => p.updatePotential(movedPlayer, "opponent"));
+  }
+
+  update(obstacles){
+    this.players.forEach(p => p.update(obstacles));
   }
 
   updateActiveDirections(keys){
@@ -21,45 +38,43 @@ class Team {
     }
   }
 
-  closestPlayer(obj){
-    var minDist = null;
-    var minPlayer = null;
-    for(var i = 0; i < this.players.length; i++){
-      var p = this.players[i];
-      var dist = Math.sqrt((p.x - obj.x)**2 + (p.y - obj.y)**2)
-
-      if (p !== this.activePlayer && (minDist == null || dist < minDist)){
-        minDist = dist;
-        minPlayer = p;
-      }
+  randomPlayer(){
+    var newIndex = Math.round(Math.random() * (this.players.length - 1));
+    while (this.players[newIndex] === this.activePlayer){
+      newIndex = Math.round(Math.random() * (this.players.length - 1));
     }
-    return minPlayer;
+    return this.players[newIndex];
   }
 
+  // switch to player closest to puck
   switchPlayer(puck, keys){
     if(this.type == "user"){
-       // to closest to puck
-      var minPlayer = this.closestPlayer(puck);
-
+      // cycling with probability so that each player gets chance
+      var prob = Math.round(Math.random() * 10);
+      var p;
+      if (prob < 7){
+        p = this.activePlayer.closestPlayer(puck);
+      }
+      else{
+        p = this.randomPlayer();
+      }
+      
       this.activePlayer.activation(false, []);
-      this.activePlayer = minPlayer;
+      this.activePlayer = p;
       this.activePlayer.activation(true, keys); 
     }
   }
 
   pass(puck, keys){
     if(this.type == "user"){
-      // to closest to p
-      var minPlayer = this.closestPlayer(this.activePlayer);
-
-      var vX = (minPlayer.x - this.activePlayer.x )/5;
-      var vY = (minPlayer.y - this.activePlayer.y)/5;
+      // to closest to the active player
+      var p = this.activePlayer.mostOpenPlayer();
 
       this.activePlayer.pass();
-      this.activePlayer = minPlayer;
+      this.activePlayer = p;
       this.activePlayer.activation(true, keys);
 
-      puck.pass(vX,vY);
+      puck.pass(p);
     } 
   }
 

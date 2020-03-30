@@ -5,25 +5,30 @@ class Game {
     this.width = width;
     this.height = height;
 
-    this.playersL = [
-      new Player(300, 200, 25, width, height, ctx, "Bob", "red"),
-      new Player(200, 100, 25, width, height, ctx, "Kate", "red"),
-      new Player(200, 300, 25, width, height, ctx, "Adam", "red")
-    ];
-
-    this.playersR = [
-      new Player(400, 200, 25, width, height, ctx, "Rob", "green"),
-      new Player(500, 100, 25, width, height, ctx, "Nate", "green"),
-      new Player(500, 300, 25, width, height, ctx, "Odem", "green")
-    ];
-
     this.netL = new Net(50, this.height/2, 10, this.height/4, this.ctx, "LEFT")
     this.netR = new Net(this.width - 50, this.height/2, 10, this.height/4, this.ctx, "RIGHT")
 
-    this.teamL = new Team(this.netL, this.playersL, "Team A", "red", "user");
-    this.teamR = new Team(this.netR, this.playersR, "Team B", "green", "cpu");
-
     this.puck = new Puck(this.width, this.height, this.ctx);
+
+    this.teamL = new Team(this.netL, "Team A", "red", "user");
+    this.teamR = new Team(this.netR, "Team B", "green", "cpu");
+
+    this.playersL = [
+      new Player(300, 200, 25, width, height, ctx, "Bob", this.teamL, this.puck),
+      new Player(200, 100, 25, width, height, ctx, "Kate", this.teamL, this.puck),
+      new Player(200, 300, 25, width, height, ctx, "Adam", this.teamL, this.puck)
+    ];
+
+    this.playersR = [
+      new Player(400, 200, 25, width, height, ctx, "Rob", this.teamR, this.puck),
+      new Player(500, 100, 25, width, height, ctx, "Nate", this.teamR, this.puck),
+      new Player(500, 300, 25, width, height, ctx, "Odem", this.teamR, this.puck)
+    ];
+
+    this.teamL.setOpponent(this.teamR);
+    this.teamR.setOpponent(this.teamL);
+    this.teamL.setPlayers(this.playersL);
+    this.teamR.setPlayers(this.playersR);
 
     this.pressedKeys = [];
   }
@@ -35,9 +40,9 @@ class Game {
       this.redraw(); 
     }
     catch(e){
+      console.log(e);
       if (e.type == "goal"){
         e.net.score();
-        alert(e.message);
       }
 
       this.reset();
@@ -70,8 +75,8 @@ class Game {
   }
 
   update(){
-    this.teamL.players.forEach(p => p.update([this.netL, this.netR], this.puck));
-    this.teamR.players.forEach(p => p.update([this.netL, this.netR], this.puck));
+    this.teamL.update([this.netL, this.netR]);
+    this.teamR.update([this.netL, this.netR])
     this.puck.update([this.netL, this.netR]);
   }
 

@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 		// switch player
 		if (e.which == 67){
-			if(game.puck.owner !== game.teamL.activePlayer && game.puck.owner !== game.teamR.activePlayer){
+			if(game.puck.owner == null || game.puck.owner !== game.teamL.activePlayer && game.puck.owner !== game.teamR.activePlayer){
 				game.switchPlayer();
 			}
 			else{
@@ -59,8 +59,9 @@ $(document).ready(function(){
 	    e.preventDefault(); // prevent the default action (scroll / move caret)
 	});
 
+	game.reset();
     setInterval(function(){
     	game.clock();
-    }, 75);
+    }, 25);
   
 });

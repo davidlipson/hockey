@@ -6,12 +6,18 @@ class Puck {
     this.height = h;
     this.vX = 0;
     this.vY = 0;
-    this.vMax = 30;
+    this.shootMax = .1;
+    this.passMax = .1;
     this.r = 10;
     this.ctx = ctx;
     this.owner = null;
     this.lastOwner = null;
     this.absorb = 0.5;
+  }
+
+  take(p){
+    this.owner = p;
+    console.log(this.lastOwner, this.owner);
   }
   
   redraw(){
@@ -36,15 +42,16 @@ class Puck {
   shoot(){
     // set initial vX and vY of shot
     // change this to aim at the owner/player's oppononents net
-    this.vX = (this.owner.vX / this.owner.vMax) * this.vMax;
-    this.vY = (this.owner.vY / this.owner.vMax) * this.vMax;
-
+    this.vX = this.shootMax*(this.owner.team.opponent.net.x - this.owner.x);
+    this.vY = this.shootMax*(this.owner.team.opponent.net.y - this.owner.y);
+    this.lastOwner = this.owner;
     this.owner = null;
   }
 
-  pass(vX, vY){
-    this.vX = vX;
-    this.vY = vY;
+  pass(target){
+    this.vX = this.passMax*(target.x - this.owner.x);
+    this.vY = this.passMax*(target.y - this.owner.y);
+    this.lastOwner = this.owner;
     this.owner = null;
   }
 
@@ -55,7 +62,6 @@ class Puck {
       var o = obstacles[i];
       if (up[0] - this.r/2 <= o.x + o.width/2 && up[0] + this.r/2 >= o.x - o.width/2 &&
         up[1] - this.r/2 <= o.y + o.height/2 && up[1] + this.r/2 >= o.y - o.height/2) {
-        console.log(o instanceof Net);
         if (o instanceof Net){
           throw {
             type: "goal",
