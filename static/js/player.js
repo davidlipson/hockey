@@ -16,6 +16,12 @@ class Player {
     this.releasedPuck = false;
   }
 
+  activation(isActive, keys){
+    this.active = isActive;
+    this.releasedPuck = false;
+    this.activeDirections = keys
+  }
+
   reset(){
       // add positions
     this.vX = 0;
@@ -33,6 +39,18 @@ class Player {
   redraw(){
     this.ctx.fillStyle = this.colour; // change to team.color
     this.ctx.fillRect(this.x - this.r/2, this.y - this.r/2, this.r, this.r)
+
+    if(this.active){
+      this.ctx.strokeStyle = "blue";
+      this.ctx.lineWidth = 3; 
+      this.ctx.strokeRect(this.x - this.r/2 - 5/2, this.y - this.r/2 - 5/2, this.r + 5, this.r + 5)
+    }
+  }
+
+  pass(){
+    this.releasedPuck = true;
+    this.active = false;
+    this.activeDirections = [];
   }
 
   skate(){

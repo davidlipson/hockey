@@ -14,7 +14,7 @@ class Net {
   }
   
   redraw(){
-    this.ctx.fillStyle = "black"; // change to team.color
+    this.ctx.fillStyle = "red"; // change to team.color
     this.ctx.fillRect(this.x - this.width/2, this.y - this.height/2, this.width, this.height)
   }
 

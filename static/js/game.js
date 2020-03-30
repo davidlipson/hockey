@@ -39,6 +39,45 @@ class Game {
     this.players.forEach(p => p.reset());
   }
 
+  closestPlayer(obj){
+    var minDist = null;
+    var minPlayer = null;
+    for(var i = 0; i < this.players.length; i++){
+      var p = this.players[i];
+      var dist = Math.sqrt((p.x - obj.x)**2 + (p.y - obj.y)**2)
+
+      if (p !== this.activePlayer && (minDist == null || dist < minDist)){
+        minDist = dist;
+        minPlayer = p;
+      }
+    }
+    return minPlayer;
+  }
+
+  switchPlayer(){
+    // to closest to puck
+    var minPlayer = this.closestPlayer(this.puck);
+
+    this.activePlayer.activation(false, []);
+    this.activePlayer = minPlayer;
+    this.activePlayer.activation(true, this.pressedKeys);
+  }
+
+  pass(){
+    // to closest to p
+    var minPlayer = this.closestPlayer(this.activePlayer);
+
+    var vX = (minPlayer.x - this.activePlayer.x )/5;
+    var vY = (minPlayer.y - this.activePlayer.y)/5;
+
+    this.activePlayer.pass();
+    this.activePlayer = minPlayer;
+    this.activePlayer.activation(true, this.pressedKeys);
+
+
+    this.puck.pass(vX,vY);
+  }
+
   updateActiveDirections(){
     if (this.activePlayer) this.activePlayer.activeDirections = this.pressedKeys;
   }
@@ -51,6 +90,7 @@ class Game {
   redraw(){
     // background
     this.ctx.clearRect(0, 0, this.width, this.height);
+    this.ctx.strokeStyle = "white";
     this.ctx.beginPath();
     this.ctx.arc(this.width/2, this.height/2, this.height/6, 0, 2 * Math.PI);
     this.ctx.stroke();

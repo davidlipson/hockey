@@ -15,7 +15,7 @@ class Puck {
   }
   
   redraw(){
-    this.ctx.fillStyle = "white";
+    this.ctx.fillStyle = "black";
     this.ctx.beginPath();
     this.ctx.arc(this.x, this.y, this.r, 0, 2 * Math.PI);
     this.ctx.fill();
@@ -35,10 +35,16 @@ class Puck {
 
   shoot(){
     // set initial vX and vY of shot
-    console.log(this.owner.vX, this.owner.vY);
+    // change this to aim at the owner/player's oppononents net
     this.vX = (this.owner.vX / this.owner.vMax) * this.vMax;
     this.vY = (this.owner.vY / this.owner.vMax) * this.vMax;
 
+    this.owner = null;
+  }
+
+  pass(vX, vY){
+    this.vX = vX;
+    this.vY = vY;
     this.owner = null;
   }
 

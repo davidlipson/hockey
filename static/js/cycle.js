@@ -5,15 +5,27 @@ $(document).ready(function(){
     var width = $("#canvas").width();
 
     var activePlayer = new Player(100, 100, 25, width, height, ctx, "Bob", "red", true)
-	var players = [activePlayer]
+	var players = [activePlayer,
+					 new Player(200, 100, 25, width, height, ctx, "Kate", "red", false),
+					  new Player(300, 100, 25, width, height, ctx, "Adam", "red", false)]
 	var game = new Game(ctx, width, height, players, activePlayer);
 
 	// start moving
 	$(document).keydown(function(e) {
 		// shot
-		if (e.which == 32){
+		if (e.which == 88){
 			if (game.puck.owner === game.activePlayer){
 				game.puck.shoot();
+			}
+		}
+
+		// switch player
+		if (e.which == 67){
+			if(game.puck.owner !== game.activePlayer){
+				game.switchPlayer();
+			}
+			else{
+				game.pass();
 			}
 		}
 
