@@ -17,7 +17,6 @@ class Puck {
 
   take(p){
     this.owner = p;
-    console.log(this.lastOwner, this.owner);
   }
   
   redraw(){
@@ -42,17 +41,22 @@ class Puck {
   shoot(){
     // set initial vX and vY of shot
     // change this to aim at the owner/player's oppononents net
-    this.vX = this.shootMax*(this.owner.team.opponent.net.x - this.owner.x);
-    this.vY = this.shootMax*(this.owner.team.opponent.net.y - this.owner.y);
-    this.lastOwner = this.owner;
-    this.owner = null;
+    if(this.owner != null){
+      this.vX = this.shootMax*(this.owner.team.opponent.net.x - this.owner.x);
+      this.vY = this.shootMax*(this.owner.team.opponent.net.y - this.owner.y);
+      this.lastOwner = this.owner;
+      this.owner = null; 
+    }
+    
   }
 
   pass(target){
-    this.vX = this.passMax*(target.x - this.owner.x);
-    this.vY = this.passMax*(target.y - this.owner.y);
-    this.lastOwner = this.owner;
-    this.owner = null;
+    if(this.owner != null){
+      this.vX = this.passMax*(target.x - this.owner.x);
+      this.vY = this.passMax*(target.y - this.owner.y);
+      this.lastOwner = this.owner;
+      this.owner = null;  
+    }
   }
 
   // update this to check entire path for really fast shots (may go through net completely)

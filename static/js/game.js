@@ -14,15 +14,15 @@ class Game {
     this.teamR = new Team(this.netR, "Team B", "green", "cpu");
 
     this.playersL = [
-      new Player(300, 200, 25, width, height, ctx, "Bob", this.teamL, this.puck),
-      new Player(200, 100, 25, width, height, ctx, "Kate", this.teamL, this.puck),
-      new Player(200, 300, 25, width, height, ctx, "Adam", this.teamL, this.puck)
+      new Player(300, 200, 25, width, height, ctx, "Bob", this.teamL, this.puck, "F"),
+      new Player(200, 100, 25, width, height, ctx, "Kate", this.teamL, this.puck, "TD"),
+      new Player(200, 300, 25, width, height, ctx, "Adam", this.teamL, this.puck, "BD")
     ];
 
     this.playersR = [
-      new Player(400, 200, 25, width, height, ctx, "Rob", this.teamR, this.puck),
-      new Player(500, 100, 25, width, height, ctx, "Nate", this.teamR, this.puck),
-      new Player(500, 300, 25, width, height, ctx, "Odem", this.teamR, this.puck)
+      new Player(400, 200, 25, width, height, ctx, "Rob", this.teamR, this.puck, "F"),
+      new Player(500, 100, 25, width, height, ctx, "Nate", this.teamR, this.puck, "TD"),
+      new Player(500, 300, 25, width, height, ctx, "Odem", this.teamR, this.puck, "BD")
     ];
 
     this.teamL.setOpponent(this.teamR);
@@ -40,7 +40,6 @@ class Game {
       this.redraw(); 
     }
     catch(e){
-      console.log(e);
       if (e.type == "goal"){
         e.net.score();
       }
@@ -60,13 +59,18 @@ class Game {
 
 
   switchPlayer(){
-    this.teamL.switchPlayer(this.puck, this.pressedKeys);
-    this.teamR.switchPlayer(this.puck, this.pressedKeys);
+    this.teamL.switchPlayer(this.puck);
+    this.teamR.switchPlayer(this.puck);
   }
 
   pass(){
     this.teamL.pass(this.puck, this.pressedKeys);
     this.teamR.pass(this.puck, this.pressedKeys);
+  }
+
+  shoot(){
+    this.teamL.shoot();
+    this.teamR.shoot();
   }
 
   updateActiveDirections(){

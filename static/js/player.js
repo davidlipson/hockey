@@ -1,5 +1,5 @@
 class Player {
-  constructor(x, y, r, w, h, ctx, name, team, puck) {
+  constructor(x, y, r, w, h, ctx, name, team, puck, position) {
     this.x = x;
     this.y = y;
     this.oX = x;
@@ -14,6 +14,7 @@ class Player {
     this.name = name;
     this.team = team;
     this.puck = puck;
+    this.position = position;
     this.active = false;
     this.activeDirections = [];
     this.releasedPuck = false;
@@ -30,6 +31,16 @@ class Player {
 
   distanceTo(o){
     return Math.sqrt((this.x - o.x)**2 + (this.y - o.y)**2);
+  }
+
+  directionTo(o){
+    var xDistance = o.x - this.x;
+    var xDirection = xDistance > 0 ? 39 : 37;
+
+    var yDistance = o.y - this.y;
+    var yDirection = yDistance > 0 ? 40 : 38;
+
+    return Math.abs(xDistance) > Math.abs(yDistance) ? xDirection : yDirection;
   }
 
   // seek farthest player on team from obj not including current player
@@ -116,19 +127,67 @@ class Player {
     this.releasedPuck = false;
     this.team.notifyMove(this);
   }
-  
-  update(obstacles){
-    // evaluate current status
 
-
-      // evaluate best action
-
-      // act
-    if (this.active){
-      this.skate();
-      this.move(obstacles);
-      this.checkPuck()
+  determineAction(){
+    // neutral
+    if (this.puck.owner == null){
+      this.triggerKey(this.directionTo(this.puck));
     }
+
+    // offense
+    else if (this.puck.owner.team === this.team) {
+      this.triggerKey(this.directionTo(this.team.opponent.net));
+    }
+
+    // defense
+    else{
+      if (this.position == "F"){
+        this.triggerKey(this.directionTo(this.puck));
+      }
+      else{
+       this.triggerKey(this.directionTo(this.team.net)); 
+      }
+      
+    }
+  }
+
+  triggerKey(key){
+    // shoot
+    if (key == 88){
+      if (this.puck.owner === this){
+        this.puck.shoot();
+      }
+    }
+
+    // movement
+    var moveMap = {
+      37: "left",
+      38: "up",
+      39: "right",
+      40: "down"
+    }
+
+    if (key in moveMap && !(this.activeDirections.includes(moveMap[key]))){
+      //this.activeDirections.push(moveMap[key]);
+      this.activeDirections = [moveMap[key]];
+    }
+  }
+
+  releaseKey(key){
+    return;
+  }
+  
+  update(obstacles){    
+    //potentials updated in updatePotential
+
+    // act
+    if (!this.active){
+      this.determineAction(obstacles);
+    }
+
+    this.skate();
+    this.move(obstacles);
+    this.checkPuck();
   }
 
   redraw(){
@@ -143,6 +202,12 @@ class Player {
   }
 
   pass(){
+    this.releasedPuck = true;
+    this.active = false;
+    this.activeDirections = [];
+  }
+
+  shoot(){
     this.releasedPuck = true;
     this.active = false;
     this.activeDirections = [];
@@ -199,6 +264,9 @@ class Player {
       if(!this.releasedPuck){
         this.puck.take(this);
         this.releasedPuck = true;
+        if(this.team.type == "user"){
+          this.team.changeActivePlayer(this);
+        }
       }      
     }
     else{

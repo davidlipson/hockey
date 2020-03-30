@@ -11,13 +11,13 @@ $(document).ready(function(){
 		// shot
 		if (e.which == 88){
 			if (game.puck.owner === game.teamL.activePlayer || game.puck.owner === game.teamR.activePlayer){
-				game.puck.shoot();
+				game.shoot();
 			}
 		}
 
 		// switch player
 		if (e.which == 67){
-			if(game.puck.owner == null || game.puck.owner !== game.teamL.activePlayer && game.puck.owner !== game.teamR.activePlayer){
+			if(game.puck.owner == null || (game.puck.owner !== game.teamL.activePlayer && game.puck.owner !== game.teamR.activePlayer)){
 				game.switchPlayer();
 			}
 			else{

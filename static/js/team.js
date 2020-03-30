@@ -47,7 +47,7 @@ class Team {
   }
 
   // switch to player closest to puck
-  switchPlayer(puck, keys){
+  switchPlayer(puck){
     if(this.type == "user"){
       // cycling with probability so that each player gets chance
       var prob = Math.round(Math.random() * 10);
@@ -59,10 +59,16 @@ class Team {
         p = this.randomPlayer();
       }
       
-      this.activePlayer.activation(false, []);
-      this.activePlayer = p;
-      this.activePlayer.activation(true, keys); 
+      this.changeActivePlayer(p);
     }
+  }
+
+  changeActivePlayer(p){
+    var keys = this.activePlayer.activeDirections;
+
+    this.activePlayer.activation(false, []);
+    this.activePlayer = p;
+    this.activePlayer.activation(true, keys); 
   }
 
   pass(puck, keys){
@@ -78,7 +84,19 @@ class Team {
     } 
   }
 
+  shoot(){
+    if(this.type == "user"){
+      this.activePlayer.shoot();
+      this.activePlayer.puck.shoot();
+    } 
+  }
+
   reset(){
+    if (this.type == "user"){
+      this.activePlayer.activation(false, []);
+      this.activePlayer = this.players[0];
+      this.activePlayer.activation(true, []);
+    }
     this.players.forEach(p => p.reset());
   }
 
