@@ -20,6 +20,7 @@ class Player {
 
     this.active = false;
     this.activeDirections = [];
+    this.inactiveDirections = [];
     this.releasedPuck = false;
 
     this.friction = 0.25;
@@ -224,6 +225,7 @@ class Player {
     this.vX = 0;
     this.vY = 0;
     this.activeDirections = [];
+    this.inactiveDirections = [];
     this.releasedPuck = false;
     this.team.notifyMove(this);
   }
@@ -294,7 +296,7 @@ class Player {
       }
     }
 
-    // switch player
+    // pass
     if (key == 67){
       if(this.puck.owner == this){
         this.pass();
@@ -309,9 +311,9 @@ class Player {
       40: "down"
     }
 
-    if (key in moveMap && !(this.activeDirections.includes(moveMap[key]))){
+    if (key in moveMap && !(this.inactiveDirections.includes(moveMap[key]))){
       //this.activeDirections.push(moveMap[key]);
-      this.activeDirections = [moveMap[key]];
+      this.inactiveDirections = [moveMap[key]];
     }
   }
 
@@ -354,8 +356,7 @@ class Player {
     }   
 
     this.releasedPuck = true;
-    console.log(to);
-    this.puck.pass(this, to);
+    this.puck.pass(to);
     
     // fix bad passes?    
   }
@@ -367,15 +368,16 @@ class Player {
   }
 
   skate(){
-      if (!this.activeDirections.includes("left") && !this.activeDirections.includes("right")){
+      var directions = this.active ? this.activeDirections : this.inactiveDirections
+      if (!directions.includes("left") && !directions.includes("right")){
         this.vX += this.vX > 0 ? -this.friction : (this.vX < 0 ? this.friction : 0); 
       }
-      if (!this.activeDirections.includes("up") && !this.activeDirections.includes("down")){
+      if (!directions.includes("up") && !directions.includes("down")){
         this.vY += this.vY > 0 ? -this.friction : (this.vY < 0 ? this.friction : 0);
       }
 
-      for (var i = 0; i < this.activeDirections.length; i++) {
-        var key = this.activeDirections[i];
+      for (var i = 0; i < directions.length; i++) {
+        var key = directions[i];
         switch(key) {
           case "left": // left
             this.vX -= this.vX > -this.vMax ? this.acceleration : 0;

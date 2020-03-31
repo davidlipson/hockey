@@ -1,6 +1,6 @@
 class Puck {
   constructor(w, h, ctx) {
-    this.x = w/2 - 200;
+    this.x = w/2;
     this.y = h/2;
     this.width = w;
     this.height = h;
@@ -117,7 +117,7 @@ class Puck {
   }
 
   reset(){
-    this.x = this.width/2 - 200;
+    this.x = this.width/2;
     this.y = this.height/2;
     this.vX = 0;
     this.vY = 0;
