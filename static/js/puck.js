@@ -1,6 +1,6 @@
 class Puck {
   constructor(w, h, ctx) {
-    this.x = w/2;
+    this.x = w/2 - 200;
     this.y = h/2;
     this.width = w;
     this.height = h;
@@ -42,8 +42,8 @@ class Puck {
     // set initial vX and vY of shot
     // change this to aim at the owner/player's oppononents net
     if(this.owner != null){
-      this.vX = this.shootMax*(this.owner.team.opponent.net.x - this.owner.x);
-      this.vY = this.shootMax*(this.owner.team.opponent.net.y - this.owner.y);
+      this.vX = this.owner.accuracy*this.shootMax*(this.owner.team.opponent.net.x - this.owner.x);
+      this.vY = this.owner.accuracy*this.shootMax*(this.owner.team.opponent.net.y - this.owner.y);
       this.lastOwner = this.owner;
       this.owner = null; 
     }
@@ -52,8 +52,8 @@ class Puck {
 
   pass(target){
     if(this.owner != null){
-      this.vX = this.passMax*(target.x - this.owner.x);
-      this.vY = this.passMax*(target.y - this.owner.y);
+      this.vX = this.owner.accuracy*this.passMax*(target.x - this.owner.x);
+      this.vY = this.owner.accuracy*this.passMax*(target.y - this.owner.y);
       this.lastOwner = this.owner;
       this.owner = null;  
     }
@@ -117,7 +117,7 @@ class Puck {
   }
 
   reset(){
-    this.x = this.width/2;
+    this.x = this.width/2 - 200;
     this.y = this.height/2;
     this.vX = 0;
     this.vY = 0;

@@ -5,8 +5,8 @@ class Game {
     this.width = width;
     this.height = height;
 
-    this.netL = new Net(50, this.height/2, 10, this.height/4, this.ctx, "LEFT")
-    this.netR = new Net(this.width - 50, this.height/2, 10, this.height/4, this.ctx, "RIGHT")
+    this.netL = new Net(-100, this.height/2, 250, 50, this.ctx, "LEFT")
+    this.netR = new Net(this.width+100, this.height/2, 250, 50, this.ctx, "RIGHT")
 
     this.puck = new Puck(this.width, this.height, this.ctx);
 
@@ -40,6 +40,7 @@ class Game {
       this.redraw(); 
     }
     catch(e){
+      console.log(e);
       if (e.type == "goal"){
         e.net.score();
       }
@@ -64,8 +65,8 @@ class Game {
   }
 
   pass(){
-    this.teamL.pass(this.puck, this.pressedKeys);
-    this.teamR.pass(this.puck, this.pressedKeys);
+    if(this.teamL.activePlayer != null) this.teamL.activePlayer.pass();
+    if(this.teamR.activePlayer != null) this.teamR.activePlayer.pass();
   }
 
   shoot(){
@@ -79,8 +80,8 @@ class Game {
   }
 
   update(){
-    this.teamL.update([this.netL, this.netR]);
-    this.teamR.update([this.netL, this.netR])
+    this.teamL.update();
+    this.teamR.update()
     this.puck.update([this.netL, this.netR]);
   }
 

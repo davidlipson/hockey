@@ -28,8 +28,8 @@ class Team {
     this.opponent.players.forEach(p => p.updatePotential(movedPlayer, "opponent"));
   }
 
-  update(obstacles){
-    this.players.forEach(p => p.update(obstacles));
+  update(){
+    this.players.forEach(p => p.update());
   }
 
   updateActiveDirections(keys){
@@ -69,19 +69,6 @@ class Team {
     this.activePlayer.activation(false, []);
     this.activePlayer = p;
     this.activePlayer.activation(true, keys); 
-  }
-
-  pass(puck, keys){
-    if(this.type == "user"){
-      // to closest to the active player
-      var p = this.activePlayer.mostOpenPlayer();
-
-      this.activePlayer.pass();
-      this.activePlayer = p;
-      this.activePlayer.activation(true, keys);
-
-      puck.pass(p);
-    } 
   }
 
   shoot(){
