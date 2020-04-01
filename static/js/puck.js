@@ -42,8 +42,8 @@ class Puck {
     // set initial vX and vY of shot
     // change this to aim at the owner/player's oppononents net
     if(this.owner != null){
-      this.vX = this.owner.accuracy*this.shootMax*(this.owner.team.opponent.net.x - this.owner.x);
-      this.vY = this.owner.accuracy*this.shootMax*(this.owner.team.opponent.net.y - this.owner.y);
+      this.vX = this.owner.applyAccuracy(this.shootMax*(this.owner.team.opponent.net.x - this.owner.x));
+      this.vY = this.owner.applyAccuracy(this.shootMax*(this.owner.team.opponent.net.y - this.owner.y));
       this.lastOwner = this.owner;
       this.owner = null; 
     }
@@ -52,8 +52,8 @@ class Puck {
 
   pass(target){
     if(this.owner != null){
-      this.vX = this.owner.accuracy*this.passMax*(target.x - this.owner.x);
-      this.vY = this.owner.accuracy*this.passMax*(target.y - this.owner.y);
+      this.vX = this.owner.applyAccuracy(this.passMax*(target.x - this.owner.x));
+      this.vY = this.owner.applyAccuracy(this.passMax*(target.y - this.owner.y));
       this.lastOwner = this.owner;
       this.owner = null;  
     }

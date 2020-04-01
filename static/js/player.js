@@ -37,6 +37,25 @@ class Player {
     this.accuracy = 0.8;
   }
 
+  // block path between shooter and this.team.opponent.players[i]
+  coverMan(){
+    // UPDATE THIS
+    for(var i = 0; i < this.team.opponent.players.length; i++){
+      if(this.team.opponent.players[i].position == this.position) return this.team.opponent.players[i];
+    }
+  }
+
+  // returns best position to move to from current if not shooting and passing
+  optimizeMove(){
+
+  }
+
+  applyAccuracy(n){
+    var a = Math.abs(n)*(1 - this.accuracy); // max deviation from n
+    var variant = ((Math.random() * a) - a/2); // calculated deviation;
+    return n + variant;
+  }
+
   setPP(){
     this.passingBlockers = new Array(this.team.players.length).fill(null);
     this.passingProbabilities = new Array(this.team.players.length).fill(0);
@@ -251,6 +270,7 @@ class Player {
     // neutral
     if (this.puck.owner == null){
       this.triggerKey(this.directionTo(this.puck));
+      // maybe only the closest team player goes to puck in this case and the others position
     }
 
     // offense
@@ -269,19 +289,24 @@ class Player {
           console.log("shoot")
           this.triggerKey(88)//score
         }
+
+        // ELSE ADD MOVE!
       }
+
+      // get in position for a pass or shot
       else{
         this.triggerKey(this.directionTo(this.team.opponent.net));
       }
     }
 
     // defense
+    // either block the shot of your position opponent, or block pass to them
     else{
-      if (this.position == "F"){
+      if (this.position == this.puck.owner.position){
         this.triggerKey(this.directionTo(this.puck));
       }
       else{
-       this.triggerKey(this.directionTo(this.team.net)); 
+       this.triggerKey(this.directionTo(this.coverMan())); 
       }
       
     }
